@@ -6,11 +6,11 @@ The objective of this task is to create a web application allowing users to sear
 
 ## Features
 
-Features include :
+__Included features__
 * A rendered search result from a gene selection input allowing the user to view a list of genomic variants alongside variant-specific various attributes.
 * Searches are throttled when the search is fewer than 3 characters and debounced when over 3 characters, thus allowing for fewer XHR requests to the API server.
 * A RESTful endpoint supporting the functionality of querying by gene name.
-* Input and Table components form the React Material-UI provide a minimal and functional inferface.
+* Input and Table components from React Material-UI provide a minimal and functional inferface.
 
 ## Demo
 ![](https://media.giphy.com/media/Q87gkdSgQnYVWSBxEe/giphy.gif)
