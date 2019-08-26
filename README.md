@@ -10,6 +10,10 @@ Features include :
 * A rendered search result from a gene selection input allowing the user to view a list of genomic variants alongside variant-specific various attributes.
 * Searches are throttled when the search is fewer than 3 characters and debounced when over 3 characters, thus allowing for fewer XHR requests to the API server.
 * A RESTful endpoint supporting the functionality of querying by gene name.
+* Input and Table components form the React Material-UI provide a minimal and functional inferface.
+
+## Demo
+![](https://media.giphy.com/media/Q87gkdSgQnYVWSBxEe/giphy.gif)
 
 ## Installation
 1. Create a virtual [conda] (Python 3) environment called `search_stack-env` with Python and pip
@@ -59,13 +63,16 @@ Connection successful
 ```
 
 ### Install the front-end client
-Install the React Javascript client, run the build, and start the server. The client can be viewed at [http://localhost:8080].
-
+Install the React client and run the build.
 ```bash
 npm install
 npm run build
+```
+If the build is successful, run the server.
+```bash
 npm start
 ```
+The client can be viewed at http://localhost:8080.
 
 [PostgREST]: https://github.com/PostgREST/postgrest/releases/tag/v6.0.2
 [Docker]: https://www.docker.com/community-edition#download
