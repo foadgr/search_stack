@@ -1,0 +1,8 @@
+db_scheme: 'postgres://fgreen:@localhost:5432/app_db'
+
+dtypes:
+  floats: ['chr', 'genomic_start', 'genomic_stop']
+  dates: ['last_evaluated', 'last_updated']
+  not_char: ['last_evaluated', 'last_updated', 'chr', 'genomic_start', 'genomic_stop']
+
+download_uri: 'http://clinvitae.invitae.com/download'
