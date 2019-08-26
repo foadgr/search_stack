@@ -8,11 +8,15 @@ from zipfile import ZipFile, ZIP_STORED
 import csv
 from io import BytesIO
 import re
+import os
 
 
-class Setup(Load):
+class Insert():
     def __init__(self):
         super().__init__()
+
+        here = os.path.dirname( __file__ )
+        self.target = os.path.abspath(os.path.join(here, '..'))
 
         self.uri = self.setup['download_uri']
 
@@ -53,7 +57,6 @@ class Setup(Load):
                 return re.sub(un, '_', c.lower())
             return re.sub(sp, '', sub1(c))
         return [sub2(c) for c in dfcols]
-        # return df
 
     def cast(self, df):
         for k, v in self.dtypes.items():
@@ -85,7 +88,13 @@ class Setup(Load):
         df.columns = self.fix_colnames(df.columns)
         return self.cast(df)
 
-    def insert(self, df=None):
+    def create_table(self):
+        sql_file = open(f'{self.target}/config/setup/init.sql').read()
+        self.conn.execute(sql_file)
+        print(f"Created empty table: {self.conn.table_names()[0]}")
+        return None
+
+    def to_db(self, df=None):
         if df is None:
             df = self.run()
             print('Ran data.')
@@ -100,7 +109,6 @@ class Setup(Load):
         print('Loaded data.')
         return None
 
-
-
-
-
+if __name__ == "__main__":
+    Insert().create_table()
+    Insert().to_db()
