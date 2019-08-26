@@ -39,15 +39,20 @@ sudo docker run --name app_db -p 5433:5432 \
 ```
 
 ### Install PostgREST
-Install the latest version of [PostgREST], make the package executable, and run the server based on the server configuration in `config/setup/db.conf`.
+Install the latest version of [PostgREST], make the package executable (optional), and run the server based on the server configuration in `config/setup/db.conf`.
 
 ```bash
 # download from https://github.com/PostgREST/postgrest/releases/latest
 (search_stack-env) ➜ tar xfJ postgrest-v6.0.2-osx.tar.xz
+
+# As an executable
 (search_stack-env) ➜ cp postgrest /usr/local/bin
 (search_stack-env) ➜ postgrest config/setup/db.conf
 
-#You should see
+# Or run outside of bin
+(search_stack-env) ➜ ./postgrest config/setup/db.conf
+
+# You should see the following output
 Listening on port 3000
 Attempting to connect to the database...
 Connection successful
