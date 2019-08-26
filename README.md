@@ -1,41 +1,83 @@
-## Docker
+# Search Stack
 
 
-PostgREST serves a fully RESTful API from any existing PostgreSQL database. It provides a cleaner, more standards-compliant, faster API than you are likely to write from scratch.
+## Objective
+The objective of this task is to create a web application allowing users to search by gene name for genomic variants rendered in a tabular view.
 
-Image contains
-<!-- https://github.com/suzel/docker-postgrest -->
-- postgrest
-- pgweb
-- postgres alpine
+## Features
 
-Build the custom Docker image and start running the container:
+Features include :
+* A rendered search result from a gene selection input allowing the user to view a list of genomic variants alongside variant-specific various attributes.
+* Searches are throttled when the search is fewer than 3 characters and debounced when over 3 characters, thus allowing for fewer XHR requests to the API server.
+* A RESTful endpoint supporting the functionality of querying by gene name.
+
+## Installation
+1. Create a virtual [conda] (Python 3) environment called `search_stack-env` with Python and pip
+
 ```bash
-docker-compose up -d --build
-docker-compose up
+➜  conda create --name search_stack-env python=3.6 pip
+➜  source activate search_stack-env
+(search_stack-env) ➜
 ```
+[conda]: https://docs.anaconda.com/anaconda/install/ "Anaconda Installation"
 
-The docker-entrypoint-initdb.d folder will only be run once while the container is created (instantiated) so you actually have to do a docker-compose down -v to re-activate this for the next run.
+2. Clone the repository and install package requirements.
+
 ```bash
-docker-compose down -v
+(search_stack-env) ➜ git clone https://github.com/foadgr/search_stack.git
+(search_stack-env) ➜ cd search_stack
+(search_stack-env) ➜ pip install -r requirements.txt
 ```
 
-```
-Description of n_distinct
--1 indicates that each row in the column is unique.
 
->=1 indicates the number of unique values in the column
-<1 indicates the number/total number of unique values in the column
-
-Description of correlation
-It indicates the linear correlation between this column and the data stack storage, where 1 indicates perfect positive correlation. As the value gets closer to 0, the data distribution is more discrete. <0 indicates an inverse correlation.
+### Install PostgreSQL
+A PostgreSQL database image can be pulled from [Docker].
+```bash
+sudo docker run --name app_db -p 5433:5432 \
+                -e POSTGRES_PASSWORD= \
+                -d fgreen
 ```
 
+### Install PostgREST
+Install the latest version of [PostgREST], make the package executable, and run the server based on the server configuration in `config/setup/db.conf`.
+
+```bash
+# download from https://github.com/PostgREST/postgrest/releases/latest
+(search_stack-env) ➜ tar xfJ postgrest-v6.0.2-osx.tar.xz
+(search_stack-env) ➜ cp postgrest /usr/local/bin
+(search_stack-env) ➜ postgrest config/setup/db.conf
+
+#You should see
+Listening on port 3000
+Attempting to connect to the database...
+Connection successful
+```
+
+### Install the front-end client
+Install the React Javascript client, run the build, and start the server. The client can be viewed at [http://localhost:8080].
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+[PostgREST]: https://github.com/PostgREST/postgrest/releases/tag/v6.0.2
+[Docker]: https://www.docker.com/community-edition#download
+[http://localhost:8080]: [http://localhost:8080]
+
+## Setup
+### Load source data
+Extract genomic variatns source data from web source, data cleaning, and load to `app_db` genomic variants data from web source.
+```bash
+(search_stack-env) ➜ python search_stack/insert.py
+```
+
+Note: running `insert.py` will also create all SQL components, tables/view, and table indexes. For the purpose of gene lookup in this exercise, a regular B-Tree index with the `varchar_pattern_ops` operator class will help speed up search queries. Additionally, querying only the gene prefix will help save space for the index.
 ```sql
-select tablename,attname,n_distinct,correlation
-from pg_stats where tablename='variant_results'
+CREATE INDEX ON api.variants (substr(gene, 1, 4) varchar_pattern_ops);
 ```
-
-```
-sequelize-auto -h localhost -d app_db -u fgreen -p 5432 -e postgres -o "./src/models" -t variant_results
+This will work alongside the main REST endpoint in the search query:
+```sql
+SELECT gene FROM api.variants WHERE subtr(gene, 1, 4) LIKE '{user input}%'
 ```
