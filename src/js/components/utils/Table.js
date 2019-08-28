@@ -6,9 +6,8 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,36 +25,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const row = (x, i, header) => (
-    <TableRow key={`tr-${i}`}>
-    {
-      header.map((y, k) => (
-        <TableCell align="right" key={`trc-${k}`}>
-          {x[y.prop]}
-        </TableCell>
-        )
-      )
-    }
-
-    </TableRow>
+  <TableRow key={`tr-${i}`}>
+    {header.map((y, k) => (
+      <TableCell align="right" key={`trc-${k}`}>
+        {x[y.prop]}
+      </TableCell>
+    ))}
+  </TableRow>
 );
 
-export default ({data, header}) => {
+export default ({ data, header }) => {
   return (
-      <Table className={useStyles().table} size="small">
-        <TableHead>
-          <TableRow>
-            {
-              header.map((x, i) =>
-                <TableCell
-                  key={`thc-${i}`}
-                  align="right"
-                >{x.name}</TableCell>)
-            }
-          </TableRow>
-        </TableHead>
-          <TableBody>
-            {data.map((x, i) => row(x, i, header))}
-          </TableBody>
-      </Table>
-    )
-}
+    <Table className={useStyles().table} size="small">
+      <TableHead>
+        <TableRow>
+          {header.map((x, i) => (
+            <TableCell key={`thc-${i}`} align="right">
+              {x.name}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+      <TableBody>{data.map((x, i) => row(x, i, header))}</TableBody>
+    </Table>
+  );
+};

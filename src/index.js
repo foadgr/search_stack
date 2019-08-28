@@ -1,1 +1,1 @@
-import Searchable from "./js/components/utils/Search.jsx";
+import Searchable from './js/components/utils/Search.js';
