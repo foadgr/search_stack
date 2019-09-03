@@ -15,13 +15,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Description
-Search stack is a basic web application framework enabling users to search by gene name for genomic variants, with results rendered in a tabular view.
+Search Stack is a web app framework enabling users to search a PostgreSQL database by a field name, with results rendered in a simple tabular view.
 
 __Included features__
 * A rendered search result from a gene selection input allowing the user to view a list of genomic variants alongside variant-specific attributes.
 * Throttle-debounced XHR requesting thus allowing for fewer GETS to database server.
-    - Search is throttled query is fewer than 5 characters,
-    - Searhc is debounced over 5 characters, thus allowing for fewer XHR requests to the API server.
+    - Search is throttled query is fewer than 5 characters
+    - Search is debounced over 5 characters
 * A RESTful endpoint serving gene-name query functionality.
 * Input and Table components from React Material-UI provide a minimal and functional inferface.
 
